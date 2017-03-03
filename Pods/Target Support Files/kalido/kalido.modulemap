@@ -1,0 +1,6 @@
+framework module kalido {
+  umbrella header "kalido-umbrella.h"
+
+  export *
+  module * { export * }
+}

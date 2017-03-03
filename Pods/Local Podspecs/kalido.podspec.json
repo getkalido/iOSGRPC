@@ -1,0 +1,60 @@
+{
+  "name": "kalido",
+  "version": "0.0.2",
+  "license": "New BSD",
+  "authors": {
+    "gRPC contributors": "grpc-io@googlegroups.com"
+  },
+  "homepage": "http://www.grpc.io/",
+  "summary": "KalidoGRPC example",
+  "source": {
+    "git": "https://github.com/grpc/grpc.git"
+  },
+  "platforms": {
+    "ios": "7.1",
+    "osx": "10.9"
+  },
+  "dependencies": {
+    "!ProtoCompiler-gRPCPlugin": [
+      "~> 1.0"
+    ]
+  },
+  "prepare_command": "mkdir -p Pods/kalido\nPods/!ProtoCompiler/protoc         --plugin=protoc-gen-grpc=Pods/!ProtoCompiler-gRPCPlugin/grpc_objective_c_plugin         --objc_out=Pods/kalido         --grpc_out=Pods/kalido         -I .         -I Pods/!ProtoCompiler         ./kalido.proto",
+  "pod_target_xcconfig": {
+    "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1",
+    "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES": "YES"
+  },
+  "subspecs": [
+    {
+      "name": "Messages",
+      "source_files": [
+        "Pods/kalido/*.pbobjc.{h,m}",
+        "Pods/kalido/**/*.pbobjc.{h,m}"
+      ],
+      "header_mappings_dir": "Pods/kalido",
+      "requires_arc": false,
+      "dependencies": {
+        "Protobuf": [
+
+        ]
+      }
+    },
+    {
+      "name": "Services",
+      "source_files": [
+        "Pods/kalido/*.pbrpc.{h,m}",
+        "Pods/kalido/**/*.pbrpc.{h,m}"
+      ],
+      "header_mappings_dir": "Pods/kalido",
+      "requires_arc": true,
+      "dependencies": {
+        "gRPC-ProtoRPC": [
+
+        ],
+        "kalido/Messages": [
+
+        ]
+      }
+    }
+  ]
+}

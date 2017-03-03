@@ -1,0 +1,74 @@
+// https://github.com/getkalido/samui-server/blob/feature/grpc_crazyness/proto/kalido.proto
+
+syntax = "proto3";
+
+/*
+    Naming convention:
+    Messages, Services, Enums and Packages: TestCase
+    enum members: phoneNumber
+    rpcFunctions: getPhoneNumber
+    message properties: phoneNumber
+*/
+
+option java_multiple_files = true;
+option java_package = "me.kalido.kalidogrpc";
+option java_outer_classname = "KalidoServiceProto";
+option objc_class_prefix = "KAL";
+
+package Kalido;
+
+service KalidoService {
+    // Returns the users Nearby stream
+    rpc getNearby(FetchOptions) returns (stream Nearby) {}
+}
+
+message Auth {
+    int64 user_id = 1;
+    string token = 2;
+}
+
+// Used by the client to define how they want the server to give them data
+message FetchOptions {
+    Auth auth = 1;
+    int32 offset  = 2;
+    int32 limit = 3;
+}
+
+message Error {
+    string message = 1;
+}
+
+message Nearby {
+    enum UserType {
+        phone = 0;
+        kalido = 1;
+        oneWay = 2;
+        prompt = 3;
+        match = 4;
+        user = 5;
+        deleted = 6;
+    }
+
+    Error error = 21;
+
+    int64 id = 1;    // user id
+    UserType t = 2;  // type of user
+    string fn = 3;   // first name
+    string ln = 4;   // last name
+    string img = 5;  // profile photo url
+    string l = 6;    // location string
+    int64 f = 7;     // location freshness
+    int64 k = 8;     // endcoded location
+    bool b = 9;      // blocked
+    int64 bt = 10;   // blocked timestamp
+    bool bl = 11;    // location block
+    int64 blt = 12;  // location block timestamp
+    string mt = 13;  // match string for type MATCH
+    bool hcc = 14;   // has common contacts
+    bool aowc = 15;  // allow one way contact
+    bool ib = 16;    // inverse block (has this user blocked me)
+    int64 uf = 17;   // user freshness (timestamp of last api action)
+    string ls = 18;  // location string
+    string cfn = 19; // prompt contact first name
+    string cln = 20; // prompt contact last name
+}
