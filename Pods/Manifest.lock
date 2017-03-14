@@ -25,14 +25,14 @@ PODS:
     - gRPC-RxLibrary (= 1.1.0)
     - Protobuf (~> 3.0)
   - gRPC-RxLibrary (1.1.0)
-  - kalido (0.0.2):
+  - kalido (0.0.16):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
-    - kalido/Messages (= 0.0.2)
-    - kalido/Services (= 0.0.2)
-  - kalido/Messages (0.0.2):
+    - kalido/Messages (= 0.0.16)
+    - kalido/Services (= 0.0.16)
+  - kalido/Messages (0.0.16):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
     - Protobuf
-  - kalido/Services (0.0.2):
+  - kalido/Services (0.0.16):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
     - gRPC-ProtoRPC
     - kalido/Messages
@@ -53,7 +53,7 @@ SPEC CHECKSUMS:
   gRPC-Core: e341f77a880a20a507f9c988ce5fb021b6a5ddfa
   gRPC-ProtoRPC: ef704b04fdfebb0221df26886b6a6e7fd20100d5
   gRPC-RxLibrary: 8f4a1514a8746d7696441358353debac4242a33e
-  kalido: d164020b9ae9b8eb80db4122391bfa615b901396
+  kalido: 71f5815a56bd005b7adbf0bb1c714a21e4b3c0bc
   Protobuf: 745f59e122e5de98d4d7ef291e264a0eef80f58e
 
 PODFILE CHECKSUM: b5dc916af5a3abc90b5495c7e23998b9f1377adf

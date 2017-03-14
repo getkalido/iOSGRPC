@@ -27,38 +27,63 @@
 
 CF_EXTERN_C_BEGIN
 
-@class KALAuth;
-@class KALError;
+@class GPBAny;
+@class KLDAction;
+@class KLDIdentifier;
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Enum KALNearby_UserType
+#pragma mark - Enum KLDAction_ActionType
 
-typedef GPB_ENUM(KALNearby_UserType) {
+typedef GPB_ENUM(KLDAction_ActionType) {
   /**
    * Value used if any message's field encounters a value that is not defined
    * by this enum. The message will also have C functions to get/set the rawValue
    * of the field.
    **/
-  KALNearby_UserType_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
-  KALNearby_UserType_Phone = 0,
-  KALNearby_UserType_Kalido = 1,
-  KALNearby_UserType_OneWay = 2,
-  KALNearby_UserType_Prompt = 3,
-  KALNearby_UserType_Match = 4,
-  KALNearby_UserType_User = 5,
-  KALNearby_UserType_Deleted = 6,
+  KLDAction_ActionType_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
+  KLDAction_ActionType_Nothing = 0,
+  KLDAction_ActionType_Insert = 1,
+  KLDAction_ActionType_Update = 2,
+  KLDAction_ActionType_Delete = 3,
+  KLDAction_ActionType_Reorder = 4,
 };
 
-GPBEnumDescriptor *KALNearby_UserType_EnumDescriptor(void);
+GPBEnumDescriptor *KLDAction_ActionType_EnumDescriptor(void);
 
 /**
  * Checks to see if the given value is defined by the enum or was not known at
  * the time this source was generated.
  **/
-BOOL KALNearby_UserType_IsValidValue(int32_t value);
+BOOL KLDAction_ActionType_IsValidValue(int32_t value);
 
-#pragma mark - KALKalidoRoot
+#pragma mark - Enum KLDNearby_UserType
+
+typedef GPB_ENUM(KLDNearby_UserType) {
+  /**
+   * Value used if any message's field encounters a value that is not defined
+   * by this enum. The message will also have C functions to get/set the rawValue
+   * of the field.
+   **/
+  KLDNearby_UserType_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
+  KLDNearby_UserType_Phone = 0,
+  KLDNearby_UserType_Kalido = 1,
+  KLDNearby_UserType_OneWay = 2,
+  KLDNearby_UserType_Prompt = 3,
+  KLDNearby_UserType_Match = 4,
+  KLDNearby_UserType_User = 5,
+  KLDNearby_UserType_Deleted = 6,
+};
+
+GPBEnumDescriptor *KLDNearby_UserType_EnumDescriptor(void);
+
+/**
+ * Checks to see if the given value is defined by the enum or was not known at
+ * the time this source was generated.
+ **/
+BOOL KLDNearby_UserType_IsValidValue(int32_t value);
+
+#pragma mark - KLDKalidoRoot
 
 /**
  * Exposes the extension registry for this file.
@@ -70,164 +95,226 @@ BOOL KALNearby_UserType_IsValidValue(int32_t value);
  * which is a @c GPBExtensionRegistry that includes all the extensions defined by
  * this file and all files that it depends on.
  **/
-@interface KALKalidoRoot : GPBRootObject
+@interface KLDKalidoRoot : GPBRootObject
 @end
 
-#pragma mark - KALAuth
+#pragma mark - KLDAuth
 
-typedef GPB_ENUM(KALAuth_FieldNumber) {
-  KALAuth_FieldNumber_UserId = 1,
-  KALAuth_FieldNumber_Token = 2,
+typedef GPB_ENUM(KLDAuth_FieldNumber) {
+  KLDAuth_FieldNumber_Token = 1,
+  KLDAuth_FieldNumber_DeviceId = 2,
 };
 
-@interface KALAuth : GPBMessage
-
-@property(nonatomic, readwrite) int64_t userId;
+@interface KLDAuth : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *token;
 
+@property(nonatomic, readwrite, copy, null_resettable) NSString *deviceId;
+
 @end
 
-#pragma mark - KALFetchOptions
+#pragma mark - KLDStatus
 
-typedef GPB_ENUM(KALFetchOptions_FieldNumber) {
-  KALFetchOptions_FieldNumber_Auth = 1,
-  KALFetchOptions_FieldNumber_Offset = 2,
-  KALFetchOptions_FieldNumber_Limit = 3,
+typedef GPB_ENUM(KLDStatus_FieldNumber) {
+  KLDStatus_FieldNumber_Success = 1,
+};
+
+@interface KLDStatus : GPBMessage
+
+@property(nonatomic, readwrite) BOOL success;
+
+@end
+
+#pragma mark - KLDOptions
+
+typedef GPB_ENUM(KLDOptions_FieldNumber) {
+  KLDOptions_FieldNumber_PageSize = 1,
+  KLDOptions_FieldNumber_PageNumber = 2,
+  KLDOptions_FieldNumber_PageItemsArray = 3,
 };
 
 /**
  * Used by the client to define how they want the server to give them data
  **/
-@interface KALFetchOptions : GPBMessage
+@interface KLDOptions : GPBMessage
 
-@property(nonatomic, readwrite, strong, null_resettable) KALAuth *auth;
-/** Test to see if @c auth has been set. */
-@property(nonatomic, readwrite) BOOL hasAuth;
+/** how many object you want per page */
+@property(nonatomic, readwrite) int32_t pageSize;
 
-@property(nonatomic, readwrite) int32_t offset;
+/** what page you want */
+@property(nonatomic, readwrite) int32_t pageNumber;
 
-@property(nonatomic, readwrite) int32_t limit;
-
-@end
-
-#pragma mark - KALError
-
-typedef GPB_ENUM(KALError_FieldNumber) {
-  KALError_FieldNumber_Message = 1,
-};
-
-@interface KALError : GPBMessage
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *message;
+/** Array of objects that you already have */
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<KLDIdentifier*> *pageItemsArray;
+/** The number of items in @c pageItemsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger pageItemsArray_Count;
 
 @end
 
-#pragma mark - KALNearby
+#pragma mark - KLDIdentifier
 
-typedef GPB_ENUM(KALNearby_FieldNumber) {
-  KALNearby_FieldNumber_Id_p = 1,
-  KALNearby_FieldNumber_T = 2,
-  KALNearby_FieldNumber_Fn = 3,
-  KALNearby_FieldNumber_Ln = 4,
-  KALNearby_FieldNumber_Img = 5,
-  KALNearby_FieldNumber_L = 6,
-  KALNearby_FieldNumber_F = 7,
-  KALNearby_FieldNumber_K = 8,
-  KALNearby_FieldNumber_B = 9,
-  KALNearby_FieldNumber_Bt = 10,
-  KALNearby_FieldNumber_Bl = 11,
-  KALNearby_FieldNumber_Blt = 12,
-  KALNearby_FieldNumber_Mt = 13,
-  KALNearby_FieldNumber_Hcc = 14,
-  KALNearby_FieldNumber_Aowc = 15,
-  KALNearby_FieldNumber_Ib = 16,
-  KALNearby_FieldNumber_Uf = 17,
-  KALNearby_FieldNumber_Ls = 18,
-  KALNearby_FieldNumber_Cfn = 19,
-  KALNearby_FieldNumber_Cln = 20,
-  KALNearby_FieldNumber_Error = 21,
+typedef GPB_ENUM(KLDIdentifier_FieldNumber) {
+  KLDIdentifier_FieldNumber_Id_p = 1,
+  KLDIdentifier_FieldNumber_Version = 2,
+  KLDIdentifier_FieldNumber_Order = 3,
 };
 
-@interface KALNearby : GPBMessage
+/**
+ * Identify a certain item and its version
+ **/
+@interface KLDIdentifier : GPBMessage
 
-@property(nonatomic, readwrite, strong, null_resettable) KALError *error;
-/** Test to see if @c error has been set. */
-@property(nonatomic, readwrite) BOOL hasError;
-
-/** user id */
 @property(nonatomic, readwrite) int64_t id_p;
 
-/** type of user */
-@property(nonatomic, readwrite) KALNearby_UserType t;
+@property(nonatomic, readwrite) uint32_t version;
 
-/** first name */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *fn;
+@property(nonatomic, readwrite) uint32_t order;
 
-/** last name */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *ln;
+@end
 
-/** profile photo url */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *img;
+#pragma mark - KLDAction
 
-/** location string */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *l;
+typedef GPB_ENUM(KLDAction_FieldNumber) {
+  KLDAction_FieldNumber_Action = 1,
+  KLDAction_FieldNumber_Item = 2,
+  KLDAction_FieldNumber_Payload = 3,
+};
 
-/** location freshness */
-@property(nonatomic, readwrite) int64_t f;
+/**
+ * An action that must be performed by front end
+ **/
+@interface KLDAction : GPBMessage
 
-/** endcoded location */
-@property(nonatomic, readwrite) int64_t k;
+@property(nonatomic, readwrite) KLDAction_ActionType action;
 
-/** blocked */
-@property(nonatomic, readwrite) BOOL b;
+@property(nonatomic, readwrite, strong, null_resettable) KLDIdentifier *item;
+/** Test to see if @c item has been set. */
+@property(nonatomic, readwrite) BOOL hasItem;
 
-/** blocked timestamp */
-@property(nonatomic, readwrite) int64_t bt;
-
-/** location block */
-@property(nonatomic, readwrite) BOOL bl;
-
-/** location block timestamp */
-@property(nonatomic, readwrite) int64_t blt;
-
-/** match string for type MATCH */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *mt;
-
-/** has common contacts */
-@property(nonatomic, readwrite) BOOL hcc;
-
-/** allow one way contact */
-@property(nonatomic, readwrite) BOOL aowc;
-
-/** inverse block (has this user blocked me) */
-@property(nonatomic, readwrite) BOOL ib;
-
-/** user freshness (timestamp of last api action) */
-@property(nonatomic, readwrite) int64_t uf;
-
-/** location string */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *ls;
-
-/** prompt contact first name */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *cfn;
-
-/** prompt contact last name */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *cln;
+@property(nonatomic, readwrite, strong, null_resettable) GPBAny *payload;
+/** Test to see if @c payload has been set. */
+@property(nonatomic, readwrite) BOOL hasPayload;
 
 @end
 
 /**
- * Fetches the raw value of a @c KALNearby's @c t property, even
+ * Fetches the raw value of a @c KLDAction's @c action property, even
  * if the value was not defined by the enum at the time the code was generated.
  **/
-int32_t KALNearby_T_RawValue(KALNearby *message);
+int32_t KLDAction_Action_RawValue(KLDAction *message);
 /**
- * Sets the raw value of an @c KALNearby's @c t property, allowing
+ * Sets the raw value of an @c KLDAction's @c action property, allowing
  * it to be set to a value that was not defined by the enum at the time the code
  * was generated.
  **/
-void SetKALNearby_T_RawValue(KALNearby *message, int32_t value);
+void SetKLDAction_Action_RawValue(KLDAction *message, int32_t value);
+
+#pragma mark - KLDStream
+
+typedef GPB_ENUM(KLDStream_FieldNumber) {
+  KLDStream_FieldNumber_ActionsArray = 1,
+};
+
+/**
+ * Generic stream definition
+ **/
+@interface KLDStream : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<KLDAction*> *actionsArray;
+/** The number of items in @c actionsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger actionsArray_Count;
+
+@end
+
+#pragma mark - KLDNearby
+
+typedef GPB_ENUM(KLDNearby_FieldNumber) {
+  KLDNearby_FieldNumber_UserId = 1,
+  KLDNearby_FieldNumber_Type = 2,
+  KLDNearby_FieldNumber_Firstname = 3,
+  KLDNearby_FieldNumber_Lastname = 4,
+  KLDNearby_FieldNumber_ProfilePhotoURL = 5,
+  KLDNearby_FieldNumber_Location = 6,
+  KLDNearby_FieldNumber_LocationFreshness = 7,
+  KLDNearby_FieldNumber_Kvalue = 8,
+  KLDNearby_FieldNumber_Blocked = 9,
+  KLDNearby_FieldNumber_BlockedTimestamp = 10,
+  KLDNearby_FieldNumber_LocationBlocked = 11,
+  KLDNearby_FieldNumber_LocationBlockedTimestamp = 12,
+  KLDNearby_FieldNumber_MatchString = 13,
+  KLDNearby_FieldNumber_HasCommonContacts = 14,
+  KLDNearby_FieldNumber_AllowOneWayContact = 15,
+  KLDNearby_FieldNumber_InverseBlocked = 16,
+  KLDNearby_FieldNumber_UserFreshness = 17,
+  KLDNearby_FieldNumber_LocationSearchString = 18,
+  KLDNearby_FieldNumber_PromptContactFirstname = 19,
+  KLDNearby_FieldNumber_PromptContactLastname = 20,
+  KLDNearby_FieldNumber_ServerOrder = 21,
+  KLDNearby_FieldNumber_Version = 22,
+};
+
+/**
+ * Nearby data
+ **/
+@interface KLDNearby : GPBMessage
+
+@property(nonatomic, readwrite) int64_t userId;
+
+@property(nonatomic, readwrite) KLDNearby_UserType type;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *firstname;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *lastname;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *profilePhotoURL;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *location;
+
+@property(nonatomic, readwrite) int64_t locationFreshness;
+
+@property(nonatomic, readwrite) int64_t kvalue;
+
+@property(nonatomic, readwrite) BOOL blocked;
+
+@property(nonatomic, readwrite) int64_t blockedTimestamp;
+
+@property(nonatomic, readwrite) BOOL locationBlocked;
+
+@property(nonatomic, readwrite) int64_t locationBlockedTimestamp;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *matchString;
+
+@property(nonatomic, readwrite) BOOL hasCommonContacts;
+
+@property(nonatomic, readwrite) BOOL allowOneWayContact;
+
+@property(nonatomic, readwrite) BOOL inverseBlocked;
+
+@property(nonatomic, readwrite) int64_t userFreshness;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *locationSearchString;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *promptContactFirstname;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *promptContactLastname;
+
+@property(nonatomic, readwrite) int32_t serverOrder;
+
+@property(nonatomic, readwrite) uint32_t version;
+
+@end
+
+/**
+ * Fetches the raw value of a @c KLDNearby's @c type property, even
+ * if the value was not defined by the enum at the time the code was generated.
+ **/
+int32_t KLDNearby_Type_RawValue(KLDNearby *message);
+/**
+ * Sets the raw value of an @c KLDNearby's @c type property, allowing
+ * it to be set to a value that was not defined by the enum at the time the code
+ * was generated.
+ **/
+void SetKLDNearby_Type_RawValue(KLDNearby *message, int32_t value);
 
 NS_ASSUME_NONNULL_END
 

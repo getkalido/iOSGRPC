@@ -1,6 +1,6 @@
 {
   "name": "kalido",
-  "version": "0.0.2",
+  "version": "0.0.16",
   "license": "New BSD",
   "authors": {
     "gRPC contributors": "grpc-io@googlegroups.com"
@@ -11,7 +11,7 @@
     "git": "https://github.com/grpc/grpc.git"
   },
   "platforms": {
-    "ios": "7.1",
+    "ios": "9.0",
     "osx": "10.9"
   },
   "dependencies": {

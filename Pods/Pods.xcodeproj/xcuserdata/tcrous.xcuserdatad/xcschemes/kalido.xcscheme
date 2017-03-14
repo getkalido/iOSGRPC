@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'EEC2F2CC47DA55CF2BA74233'
+               BlueprintIdentifier = '0C0A93900AB1C87186B05C65'
                BlueprintName = 'kalido'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'kalido.framework'>

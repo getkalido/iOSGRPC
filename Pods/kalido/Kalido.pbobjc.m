@@ -13,48 +13,54 @@
  #import "GPBProtocolBuffers_RuntimeSupport.h"
 #endif
 
+#if GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS
+ #import <Protobuf/Any.pbobjc.h>
+#else
+ #import "google/protobuf/Any.pbobjc.h"
+#endif
+
  #import "Kalido.pbobjc.h"
 // @@protoc_insertion_point(imports)
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-#pragma mark - KALKalidoRoot
+#pragma mark - KLDKalidoRoot
 
-@implementation KALKalidoRoot
+@implementation KLDKalidoRoot
 
-// No extensions in the file and no imports, so no need to generate
-// +extensionRegistry.
+// No extensions in the file and none of the imports (direct or indirect)
+// defined extensions, so no need to generate +extensionRegistry.
 
 @end
 
-#pragma mark - KALKalidoRoot_FileDescriptor
+#pragma mark - KLDKalidoRoot_FileDescriptor
 
-static GPBFileDescriptor *KALKalidoRoot_FileDescriptor(void) {
+static GPBFileDescriptor *KLDKalidoRoot_FileDescriptor(void) {
   // This is called by +initialize so there is no need to worry
   // about thread safety of the singleton.
   static GPBFileDescriptor *descriptor = NULL;
   if (!descriptor) {
     GPB_DEBUG_CHECK_RUNTIME_VERSIONS();
-    descriptor = [[GPBFileDescriptor alloc] initWithPackage:@"Kalido"
-                                                 objcPrefix:@"KAL"
+    descriptor = [[GPBFileDescriptor alloc] initWithPackage:@"KalidoV1_0_0"
+                                                 objcPrefix:@"KLD"
                                                      syntax:GPBFileSyntaxProto3];
   }
   return descriptor;
 }
 
-#pragma mark - KALAuth
+#pragma mark - KLDAuth
 
-@implementation KALAuth
+@implementation KLDAuth
 
-@dynamic userId;
 @dynamic token;
+@dynamic deviceId;
 
-typedef struct KALAuth__storage_ {
+typedef struct KLDAuth__storage_ {
   uint32_t _has_storage_[1];
   NSString *token;
-  int64_t userId;
-} KALAuth__storage_;
+  NSString *deviceId;
+} KLDAuth__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -62,32 +68,79 @@ typedef struct KALAuth__storage_ {
   static GPBDescriptor *descriptor = nil;
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
-      {
-        .name = "userId",
-        .dataTypeSpecific.className = NULL,
-        .number = KALAuth_FieldNumber_UserId,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(KALAuth__storage_, userId),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt64,
-      },
       {
         .name = "token",
         .dataTypeSpecific.className = NULL,
-        .number = KALAuth_FieldNumber_Token,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(KALAuth__storage_, token),
+        .number = KLDAuth_FieldNumber_Token,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(KLDAuth__storage_, token),
         .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "deviceId",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDAuth_FieldNumber_DeviceId,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(KLDAuth__storage_, deviceId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[KALAuth class]
-                                     rootClass:[KALKalidoRoot class]
-                                          file:KALKalidoRoot_FileDescriptor()
+        [GPBDescriptor allocDescriptorForClass:[KLDAuth class]
+                                     rootClass:[KLDKalidoRoot class]
+                                          file:KLDKalidoRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(KALAuth__storage_)
+                                   storageSize:sizeof(KLDAuth__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\002\010\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - KLDStatus
+
+@implementation KLDStatus
+
+@dynamic success;
+
+typedef struct KLDStatus__storage_ {
+  uint32_t _has_storage_[1];
+} KLDStatus__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "success",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDStatus_FieldNumber_Success,
+        .hasIndex = 0,
+        .offset = 1,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[KLDStatus class]
+                                     rootClass:[KLDKalidoRoot class]
+                                          file:KLDKalidoRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(KLDStatus__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
@@ -97,20 +150,20 @@ typedef struct KALAuth__storage_ {
 
 @end
 
-#pragma mark - KALFetchOptions
+#pragma mark - KLDOptions
 
-@implementation KALFetchOptions
+@implementation KLDOptions
 
-@dynamic hasAuth, auth;
-@dynamic offset;
-@dynamic limit;
+@dynamic pageSize;
+@dynamic pageNumber;
+@dynamic pageItemsArray, pageItemsArray_Count;
 
-typedef struct KALFetchOptions__storage_ {
+typedef struct KLDOptions__storage_ {
   uint32_t _has_storage_[1];
-  int32_t offset;
-  int32_t limit;
-  KALAuth *auth;
-} KALFetchOptions__storage_;
+  int32_t pageSize;
+  int32_t pageNumber;
+  NSMutableArray *pageItemsArray;
+} KLDOptions__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -119,41 +172,46 @@ typedef struct KALFetchOptions__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "auth",
-        .dataTypeSpecific.className = GPBStringifySymbol(KALAuth),
-        .number = KALFetchOptions_FieldNumber_Auth,
+        .name = "pageSize",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDOptions_FieldNumber_PageSize,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(KALFetchOptions__storage_, auth),
-        .flags = GPBFieldOptional,
+        .offset = (uint32_t)offsetof(KLDOptions__storage_, pageSize),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "pageNumber",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDOptions_FieldNumber_PageNumber,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(KLDOptions__storage_, pageNumber),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "pageItemsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(KLDIdentifier),
+        .number = KLDOptions_FieldNumber_PageItemsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(KLDOptions__storage_, pageItemsArray),
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeMessage,
       },
-      {
-        .name = "offset",
-        .dataTypeSpecific.className = NULL,
-        .number = KALFetchOptions_FieldNumber_Offset,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(KALFetchOptions__storage_, offset),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt32,
-      },
-      {
-        .name = "limit",
-        .dataTypeSpecific.className = NULL,
-        .number = KALFetchOptions_FieldNumber_Limit,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(KALFetchOptions__storage_, limit),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt32,
-      },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[KALFetchOptions class]
-                                     rootClass:[KALKalidoRoot class]
-                                          file:KALKalidoRoot_FileDescriptor()
+        [GPBDescriptor allocDescriptorForClass:[KLDOptions class]
+                                     rootClass:[KLDKalidoRoot class]
+                                          file:KLDKalidoRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(KALFetchOptions__storage_)
+                                   storageSize:sizeof(KLDOptions__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\003\001\010\000\002\n\000\003\000pageItems\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -162,94 +220,20 @@ typedef struct KALFetchOptions__storage_ {
 
 @end
 
-#pragma mark - KALError
+#pragma mark - KLDIdentifier
 
-@implementation KALError
+@implementation KLDIdentifier
 
-@dynamic message;
-
-typedef struct KALError__storage_ {
-  uint32_t _has_storage_[1];
-  NSString *message;
-} KALError__storage_;
-
-// This method is threadsafe because it is initially called
-// in +initialize for each subclass.
-+ (GPBDescriptor *)descriptor {
-  static GPBDescriptor *descriptor = nil;
-  if (!descriptor) {
-    static GPBMessageFieldDescription fields[] = {
-      {
-        .name = "message",
-        .dataTypeSpecific.className = NULL,
-        .number = KALError_FieldNumber_Message,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(KALError__storage_, message),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-    };
-    GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[KALError class]
-                                     rootClass:[KALKalidoRoot class]
-                                          file:KALKalidoRoot_FileDescriptor()
-                                        fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(KALError__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
-    descriptor = localDescriptor;
-  }
-  return descriptor;
-}
-
-@end
-
-#pragma mark - KALNearby
-
-@implementation KALNearby
-
-@dynamic hasError, error;
 @dynamic id_p;
-@dynamic t;
-@dynamic fn;
-@dynamic ln;
-@dynamic img;
-@dynamic l;
-@dynamic f;
-@dynamic k;
-@dynamic b;
-@dynamic bt;
-@dynamic bl;
-@dynamic blt;
-@dynamic mt;
-@dynamic hcc;
-@dynamic aowc;
-@dynamic ib;
-@dynamic uf;
-@dynamic ls;
-@dynamic cfn;
-@dynamic cln;
+@dynamic version;
+@dynamic order;
 
-typedef struct KALNearby__storage_ {
+typedef struct KLDIdentifier__storage_ {
   uint32_t _has_storage_[1];
-  KALNearby_UserType t;
-  NSString *fn;
-  NSString *ln;
-  NSString *img;
-  NSString *l;
-  NSString *mt;
-  NSString *ls;
-  NSString *cfn;
-  NSString *cln;
-  KALError *error;
+  uint32_t version;
+  uint32_t order;
   int64_t id_p;
-  int64_t f;
-  int64_t k;
-  int64_t bt;
-  int64_t blt;
-  int64_t uf;
-} KALNearby__storage_;
+} KLDIdentifier__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -260,200 +244,38 @@ typedef struct KALNearby__storage_ {
       {
         .name = "id_p",
         .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Id_p,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, id_p),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt64,
-      },
-      {
-        .name = "t",
-        .dataTypeSpecific.enumDescFunc = KALNearby_UserType_EnumDescriptor,
-        .number = KALNearby_FieldNumber_T,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, t),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
-        .dataType = GPBDataTypeEnum,
-      },
-      {
-        .name = "fn",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Fn,
-        .hasIndex = 3,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, fn),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "ln",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Ln,
-        .hasIndex = 4,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, ln),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "img",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Img,
-        .hasIndex = 5,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, img),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "l",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_L,
-        .hasIndex = 6,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, l),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "f",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_F,
-        .hasIndex = 7,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, f),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt64,
-      },
-      {
-        .name = "k",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_K,
-        .hasIndex = 8,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, k),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt64,
-      },
-      {
-        .name = "b",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_B,
-        .hasIndex = 9,
-        .offset = 10,  // Stored in _has_storage_ to save space.
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeBool,
-      },
-      {
-        .name = "bt",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Bt,
-        .hasIndex = 11,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, bt),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt64,
-      },
-      {
-        .name = "bl",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Bl,
-        .hasIndex = 12,
-        .offset = 13,  // Stored in _has_storage_ to save space.
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeBool,
-      },
-      {
-        .name = "blt",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Blt,
-        .hasIndex = 14,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, blt),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt64,
-      },
-      {
-        .name = "mt",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Mt,
-        .hasIndex = 15,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, mt),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "hcc",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Hcc,
-        .hasIndex = 16,
-        .offset = 17,  // Stored in _has_storage_ to save space.
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeBool,
-      },
-      {
-        .name = "aowc",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Aowc,
-        .hasIndex = 18,
-        .offset = 19,  // Stored in _has_storage_ to save space.
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeBool,
-      },
-      {
-        .name = "ib",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Ib,
-        .hasIndex = 20,
-        .offset = 21,  // Stored in _has_storage_ to save space.
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeBool,
-      },
-      {
-        .name = "uf",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Uf,
-        .hasIndex = 22,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, uf),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt64,
-      },
-      {
-        .name = "ls",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Ls,
-        .hasIndex = 23,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, ls),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "cfn",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Cfn,
-        .hasIndex = 24,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, cfn),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "cln",
-        .dataTypeSpecific.className = NULL,
-        .number = KALNearby_FieldNumber_Cln,
-        .hasIndex = 25,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, cln),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "error",
-        .dataTypeSpecific.className = GPBStringifySymbol(KALError),
-        .number = KALNearby_FieldNumber_Error,
+        .number = KLDIdentifier_FieldNumber_Id_p,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(KALNearby__storage_, error),
+        .offset = (uint32_t)offsetof(KLDIdentifier__storage_, id_p),
         .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeMessage,
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "version",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDIdentifier_FieldNumber_Version,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(KLDIdentifier__storage_, version),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeUInt32,
+      },
+      {
+        .name = "order",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDIdentifier_FieldNumber_Order,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(KLDIdentifier__storage_, order),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeUInt32,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[KALNearby class]
-                                     rootClass:[KALKalidoRoot class]
-                                          file:KALKalidoRoot_FileDescriptor()
+        [GPBDescriptor allocDescriptorForClass:[KLDIdentifier class]
+                                     rootClass:[KLDKalidoRoot class]
+                                          file:KLDKalidoRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(KALNearby__storage_)
+                                   storageSize:sizeof(KLDIdentifier__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
@@ -463,42 +285,104 @@ typedef struct KALNearby__storage_ {
 
 @end
 
-int32_t KALNearby_T_RawValue(KALNearby *message) {
-  GPBDescriptor *descriptor = [KALNearby descriptor];
-  GPBFieldDescriptor *field = [descriptor fieldWithNumber:KALNearby_FieldNumber_T];
+#pragma mark - KLDAction
+
+@implementation KLDAction
+
+@dynamic action;
+@dynamic hasItem, item;
+@dynamic hasPayload, payload;
+
+typedef struct KLDAction__storage_ {
+  uint32_t _has_storage_[1];
+  KLDAction_ActionType action;
+  KLDIdentifier *item;
+  GPBAny *payload;
+} KLDAction__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "action",
+        .dataTypeSpecific.enumDescFunc = KLDAction_ActionType_EnumDescriptor,
+        .number = KLDAction_FieldNumber_Action,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(KLDAction__storage_, action),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
+        .dataType = GPBDataTypeEnum,
+      },
+      {
+        .name = "item",
+        .dataTypeSpecific.className = GPBStringifySymbol(KLDIdentifier),
+        .number = KLDAction_FieldNumber_Item,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(KLDAction__storage_, item),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "payload",
+        .dataTypeSpecific.className = GPBStringifySymbol(GPBAny),
+        .number = KLDAction_FieldNumber_Payload,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(KLDAction__storage_, payload),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[KLDAction class]
+                                     rootClass:[KLDKalidoRoot class]
+                                          file:KLDKalidoRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(KLDAction__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+int32_t KLDAction_Action_RawValue(KLDAction *message) {
+  GPBDescriptor *descriptor = [KLDAction descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:KLDAction_FieldNumber_Action];
   return GPBGetMessageInt32Field(message, field);
 }
 
-void SetKALNearby_T_RawValue(KALNearby *message, int32_t value) {
-  GPBDescriptor *descriptor = [KALNearby descriptor];
-  GPBFieldDescriptor *field = [descriptor fieldWithNumber:KALNearby_FieldNumber_T];
+void SetKLDAction_Action_RawValue(KLDAction *message, int32_t value) {
+  GPBDescriptor *descriptor = [KLDAction descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:KLDAction_FieldNumber_Action];
   GPBSetInt32IvarWithFieldInternal(message, field, value, descriptor.file.syntax);
 }
 
-#pragma mark - Enum KALNearby_UserType
+#pragma mark - Enum KLDAction_ActionType
 
-GPBEnumDescriptor *KALNearby_UserType_EnumDescriptor(void) {
+GPBEnumDescriptor *KLDAction_ActionType_EnumDescriptor(void) {
   static GPBEnumDescriptor *descriptor = NULL;
   if (!descriptor) {
     static const char *valueNames =
-        "Phone\000Kalido\000OneWay\000Prompt\000Match\000User\000De"
-        "leted\000";
+        "Nothing\000Insert\000Update\000Delete\000Reorder\000";
     static const int32_t values[] = {
-        KALNearby_UserType_Phone,
-        KALNearby_UserType_Kalido,
-        KALNearby_UserType_OneWay,
-        KALNearby_UserType_Prompt,
-        KALNearby_UserType_Match,
-        KALNearby_UserType_User,
-        KALNearby_UserType_Deleted,
+        KLDAction_ActionType_Nothing,
+        KLDAction_ActionType_Insert,
+        KLDAction_ActionType_Update,
+        KLDAction_ActionType_Delete,
+        KLDAction_ActionType_Reorder,
     };
-    static const char *extraTextFormatInfo = "\007\000%\000\001&\000\002&\000\003&\000\004%\000\005$\000\006\'\000";
+    static const char *extraTextFormatInfo = "\005\000\'\000\001&\000\002&\000\003&\000\004\'\000";
     GPBEnumDescriptor *worker =
-        [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(KALNearby_UserType)
+        [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(KLDAction_ActionType)
                                        valueNames:valueNames
                                            values:values
                                             count:(uint32_t)(sizeof(values) / sizeof(int32_t))
-                                     enumVerifier:KALNearby_UserType_IsValidValue
+                                     enumVerifier:KLDAction_ActionType_IsValidValue
                               extraTextFormatInfo:extraTextFormatInfo];
     if (!OSAtomicCompareAndSwapPtrBarrier(nil, worker, (void * volatile *)&descriptor)) {
       [worker release];
@@ -507,15 +391,390 @@ GPBEnumDescriptor *KALNearby_UserType_EnumDescriptor(void) {
   return descriptor;
 }
 
-BOOL KALNearby_UserType_IsValidValue(int32_t value__) {
+BOOL KLDAction_ActionType_IsValidValue(int32_t value__) {
   switch (value__) {
-    case KALNearby_UserType_Phone:
-    case KALNearby_UserType_Kalido:
-    case KALNearby_UserType_OneWay:
-    case KALNearby_UserType_Prompt:
-    case KALNearby_UserType_Match:
-    case KALNearby_UserType_User:
-    case KALNearby_UserType_Deleted:
+    case KLDAction_ActionType_Nothing:
+    case KLDAction_ActionType_Insert:
+    case KLDAction_ActionType_Update:
+    case KLDAction_ActionType_Delete:
+    case KLDAction_ActionType_Reorder:
+      return YES;
+    default:
+      return NO;
+  }
+}
+
+#pragma mark - KLDStream
+
+@implementation KLDStream
+
+@dynamic actionsArray, actionsArray_Count;
+
+typedef struct KLDStream__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *actionsArray;
+} KLDStream__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "actionsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(KLDAction),
+        .number = KLDStream_FieldNumber_ActionsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(KLDStream__storage_, actionsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[KLDStream class]
+                                     rootClass:[KLDKalidoRoot class]
+                                          file:KLDKalidoRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(KLDStream__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - KLDNearby
+
+@implementation KLDNearby
+
+@dynamic userId;
+@dynamic type;
+@dynamic firstname;
+@dynamic lastname;
+@dynamic profilePhotoURL;
+@dynamic location;
+@dynamic locationFreshness;
+@dynamic kvalue;
+@dynamic blocked;
+@dynamic blockedTimestamp;
+@dynamic locationBlocked;
+@dynamic locationBlockedTimestamp;
+@dynamic matchString;
+@dynamic hasCommonContacts;
+@dynamic allowOneWayContact;
+@dynamic inverseBlocked;
+@dynamic userFreshness;
+@dynamic locationSearchString;
+@dynamic promptContactFirstname;
+@dynamic promptContactLastname;
+@dynamic serverOrder;
+@dynamic version;
+
+typedef struct KLDNearby__storage_ {
+  uint32_t _has_storage_[1];
+  KLDNearby_UserType type;
+  int32_t serverOrder;
+  uint32_t version;
+  NSString *firstname;
+  NSString *lastname;
+  NSString *profilePhotoURL;
+  NSString *location;
+  NSString *matchString;
+  NSString *locationSearchString;
+  NSString *promptContactFirstname;
+  NSString *promptContactLastname;
+  int64_t userId;
+  int64_t locationFreshness;
+  int64_t kvalue;
+  int64_t blockedTimestamp;
+  int64_t locationBlockedTimestamp;
+  int64_t userFreshness;
+} KLDNearby__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "userId",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_UserId,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, userId),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "type",
+        .dataTypeSpecific.enumDescFunc = KLDNearby_UserType_EnumDescriptor,
+        .number = KLDNearby_FieldNumber_Type,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, type),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
+        .dataType = GPBDataTypeEnum,
+      },
+      {
+        .name = "firstname",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_Firstname,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, firstname),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "lastname",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_Lastname,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, lastname),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "profilePhotoURL",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_ProfilePhotoURL,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, profilePhotoURL),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "location",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_Location,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, location),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "locationFreshness",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_LocationFreshness,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, locationFreshness),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "kvalue",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_Kvalue,
+        .hasIndex = 7,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, kvalue),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "blocked",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_Blocked,
+        .hasIndex = 8,
+        .offset = 9,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "blockedTimestamp",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_BlockedTimestamp,
+        .hasIndex = 10,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, blockedTimestamp),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "locationBlocked",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_LocationBlocked,
+        .hasIndex = 11,
+        .offset = 12,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "locationBlockedTimestamp",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_LocationBlockedTimestamp,
+        .hasIndex = 13,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, locationBlockedTimestamp),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "matchString",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_MatchString,
+        .hasIndex = 14,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, matchString),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "hasCommonContacts",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_HasCommonContacts,
+        .hasIndex = 15,
+        .offset = 16,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "allowOneWayContact",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_AllowOneWayContact,
+        .hasIndex = 17,
+        .offset = 18,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "inverseBlocked",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_InverseBlocked,
+        .hasIndex = 19,
+        .offset = 20,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "userFreshness",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_UserFreshness,
+        .hasIndex = 21,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, userFreshness),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "locationSearchString",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_LocationSearchString,
+        .hasIndex = 22,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, locationSearchString),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "promptContactFirstname",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_PromptContactFirstname,
+        .hasIndex = 23,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, promptContactFirstname),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "promptContactLastname",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_PromptContactLastname,
+        .hasIndex = 24,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, promptContactLastname),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "serverOrder",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_ServerOrder,
+        .hasIndex = 25,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, serverOrder),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "version",
+        .dataTypeSpecific.className = NULL,
+        .number = KLDNearby_FieldNumber_Version,
+        .hasIndex = 26,
+        .offset = (uint32_t)offsetof(KLDNearby__storage_, version),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeUInt32,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[KLDNearby class]
+                                     rootClass:[KLDKalidoRoot class]
+                                          file:KLDKalidoRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(KLDNearby__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\016\005\r!!\000\007\021\000\n\020\000\013\017\000\014\030\000\r\013\000\016\021\000\017\022\000\020\016\000\021\r\000\022\024\000\023\026\000\024"
+        "\025\000\025\013\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+int32_t KLDNearby_Type_RawValue(KLDNearby *message) {
+  GPBDescriptor *descriptor = [KLDNearby descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:KLDNearby_FieldNumber_Type];
+  return GPBGetMessageInt32Field(message, field);
+}
+
+void SetKLDNearby_Type_RawValue(KLDNearby *message, int32_t value) {
+  GPBDescriptor *descriptor = [KLDNearby descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:KLDNearby_FieldNumber_Type];
+  GPBSetInt32IvarWithFieldInternal(message, field, value, descriptor.file.syntax);
+}
+
+#pragma mark - Enum KLDNearby_UserType
+
+GPBEnumDescriptor *KLDNearby_UserType_EnumDescriptor(void) {
+  static GPBEnumDescriptor *descriptor = NULL;
+  if (!descriptor) {
+    static const char *valueNames =
+        "Phone\000Kalido\000OneWay\000Prompt\000Match\000User\000De"
+        "leted\000";
+    static const int32_t values[] = {
+        KLDNearby_UserType_Phone,
+        KLDNearby_UserType_Kalido,
+        KLDNearby_UserType_OneWay,
+        KLDNearby_UserType_Prompt,
+        KLDNearby_UserType_Match,
+        KLDNearby_UserType_User,
+        KLDNearby_UserType_Deleted,
+    };
+    static const char *extraTextFormatInfo = "\007\000%\000\001&\000\002&\000\003&\000\004%\000\005$\000\006\'\000";
+    GPBEnumDescriptor *worker =
+        [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(KLDNearby_UserType)
+                                       valueNames:valueNames
+                                           values:values
+                                            count:(uint32_t)(sizeof(values) / sizeof(int32_t))
+                                     enumVerifier:KLDNearby_UserType_IsValidValue
+                              extraTextFormatInfo:extraTextFormatInfo];
+    if (!OSAtomicCompareAndSwapPtrBarrier(nil, worker, (void * volatile *)&descriptor)) {
+      [worker release];
+    }
+  }
+  return descriptor;
+}
+
+BOOL KLDNearby_UserType_IsValidValue(int32_t value__) {
+  switch (value__) {
+    case KLDNearby_UserType_Phone:
+    case KLDNearby_UserType_Kalido:
+    case KLDNearby_UserType_OneWay:
+    case KLDNearby_UserType_Prompt:
+    case KLDNearby_UserType_Match:
+    case KLDNearby_UserType_User:
+    case KLDNearby_UserType_Deleted:
       return YES;
     default:
       return NO;

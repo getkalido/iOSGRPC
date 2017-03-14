@@ -1,4 +1,4 @@
-// https://github.com/getkalido/samui-server/blob/feature/grpc_crazyness/proto/kalido.proto
+// https://github.com/getkalido/samui-server/blob/develop/proto/kalido.proto
 
 syntax = "proto3";
 
@@ -10,34 +10,68 @@ syntax = "proto3";
     message properties: phoneNumber
 */
 
+import "google/protobuf/any.proto";
+
 option java_multiple_files = true;
 option java_package = "me.kalido.kalidogrpc";
 option java_outer_classname = "KalidoServiceProto";
-option objc_class_prefix = "KAL";
+option objc_class_prefix = "KLD";
 
-package Kalido;
+package KalidoV1_0_0;
 
-service KalidoService {
+service Service {
+    rpc auth(Auth) returns (Status) {}
+
     // Returns the users Nearby stream
-    rpc getNearby(FetchOptions) returns (stream Nearby) {}
+    rpc streamNearby(Options) returns (stream Stream) {}
+
+    rpc duplexStreamNearby(stream Options) returns (stream Stream) {}
 }
 
 message Auth {
-    int64 user_id = 1;
-    string token = 2;
+    string token = 1;
+    string deviceId = 2;
+}
+
+message Status {
+    bool success = 1;
 }
 
 // Used by the client to define how they want the server to give them data
-message FetchOptions {
-    Auth auth = 1;
-    int32 offset  = 2;
-    int32 limit = 3;
+message Options {
+    int32 pageSize = 1; // how many object you want per page
+    int32 pageNumber = 2; // what page you want
+    repeated Identifier pageItems = 3; // Array of objects that you already have
 }
 
-message Error {
-    string message = 1;
+// Identify a certain item and its version
+message Identifier {
+    int64 id = 1;
+    uint32 version = 2;
+    uint32 order = 3;
 }
 
+// An action that must be performed by front end
+message Action {
+    enum ActionType {
+        nothing = 0;
+        insert = 1;
+        update = 2;
+        delete = 3;
+        reorder = 4;
+    }
+
+    ActionType action = 1;
+    Identifier item = 2;
+    google.protobuf.Any payload = 3;
+}
+
+// Generic stream definition
+message Stream {
+    repeated Action actions = 1;
+}
+
+// Nearby data
 message Nearby {
     enum UserType {
         phone = 0;
@@ -49,26 +83,26 @@ message Nearby {
         deleted = 6;
     }
 
-    Error error = 21;
-
-    int64 id = 1;    // user id
-    UserType t = 2;  // type of user
-    string fn = 3;   // first name
-    string ln = 4;   // last name
-    string img = 5;  // profile photo url
-    string l = 6;    // location string
-    int64 f = 7;     // location freshness
-    int64 k = 8;     // endcoded location
-    bool b = 9;      // blocked
-    int64 bt = 10;   // blocked timestamp
-    bool bl = 11;    // location block
-    int64 blt = 12;  // location block timestamp
-    string mt = 13;  // match string for type MATCH
-    bool hcc = 14;   // has common contacts
-    bool aowc = 15;  // allow one way contact
-    bool ib = 16;    // inverse block (has this user blocked me)
-    int64 uf = 17;   // user freshness (timestamp of last api action)
-    string ls = 18;  // location string
-    string cfn = 19; // prompt contact first name
-    string cln = 20; // prompt contact last name
+    int64 user_id = 1;
+    UserType type = 2;
+    string firstname = 3;
+    string lastname = 4;
+    string profilePhotoUrl = 5;
+    string location = 6;
+    int64 locationFreshness = 7;
+    int64 kvalue = 8;
+    bool blocked = 9;
+    int64 blockedTimestamp = 10;
+    bool locationBlocked = 11;
+    int64 locationBlockedTimestamp = 12;
+    string matchString = 13;
+    bool hasCommonContacts = 14;
+    bool allowOneWayContact = 15;
+    bool inverseBlocked = 16;
+    int64 userFreshness = 17;
+    string locationSearchString = 18;
+    string promptContactFirstname = 19;
+    string promptContactLastname = 20;
+    int32 serverOrder = 21;
+    uint32 version = 22;
 }
